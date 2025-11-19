@@ -219,6 +219,9 @@ func initSquareScoreTable() {
 		flipSquare[sq] = file + (7-rank)*8
 	}
 
+	// initialize move targets for all pieces
+	initMoveTargets()
+
 	for sq := 0; sq < 64; sq++ {
 		// White: use positional tables as-is
 		squareScoreTable[White][Pawn][sq] = pieceValues[Pawn] + PawnScore[sq]
@@ -282,6 +285,17 @@ func printBoard() {
 	fmt.Println("  a b c d e f g h")
 }
 
+// PrintMoveTargets zeigt alle Zielfelder für eine Position und Figur
+func PrintMoveTargets(square int, targets []int) {
+	file := square % 8
+	rank := square / 8
+	fmt.Printf("Square: %c%d (%d) -> Targets: ", 'a'+byte(file), rank+1, square)
+	for _, t := range targets {
+		fmt.Printf("%c%d ", 'a'+byte(t%8), t/8+1)
+	}
+	fmt.Println()
+}
+
 func main() {
 	// initialize precomputed square score tables
 	initSquareScoreTable()
@@ -305,4 +319,11 @@ func main() {
 	// king opening vs endgame on E4 (square index 28)
 	fmt.Println("kingOpeningScore white E4 =", kingOpeningScore[White][28])
 	fmt.Println("kingEndgameScore black E4 =", kingEndgameScore[Black][28])
+
+	fmt.Print("Debug: Knight from D4 can move to: ")
+	for _, t := range KnightTargets[D4] {
+		fmt.Print(IndexToAlgebraic(t), " ")
+	}
+	fmt.Println()
+	fmt.Printf("Debug: Square E4 = %d\n", E4)
 }
